@@ -1,0 +1,30 @@
+version: '3'
+
+services:
+  node-master:
+    dockerfile: ./master/Dockerfile
+    hostname: node-master
+    networks:
+      backend:
+        ipv4_address: 192.0.2.1
+
+  node1:
+    dockerfile: ./nodes/Dockerfile
+    hostname: node1
+    networks:
+      backend:
+        ipv4_address: 192.0.2.2
+
+  node2:
+    dockerfile: ./nodes/Dockerfile
+    hostname: node2
+    networks:
+      backend:
+        ipv4_address: 192.0.2.3
+
+networks:
+  cluster:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.0.2.0/24
