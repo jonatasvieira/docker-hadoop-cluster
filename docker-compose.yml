@@ -1,30 +1,50 @@
 version: '3'
 
 services:
+  
   node-master:
-    dockerfile: ./master/Dockerfile
+    build:
+      context: .
+      dockerfile: ./master/Dockerfile
     hostname: node-master
     networks:
-      backend:
-        ipv4_address: 192.0.2.1
+      cluster:
+        ipv4_address: 192.1.0.2
+    depends_on:
+      - node1
+      - node2
+    extra_hosts:
+      - "node1:192.1.0.3"
+      - "node2:192.1.0.4"
 
   node1:
-    dockerfile: ./nodes/Dockerfile
+    build:
+      context: .
+      dockerfile: ./nodes/Dockerfile
+    image: worker-node
     hostname: node1
     networks:
-      backend:
-        ipv4_address: 192.0.2.2
+      cluster:
+        ipv4_address: 192.1.0.3
+    extra_hosts:
+      - "node-master:192.1.0.2"
+      - "node2:192.1.0.4"
 
   node2:
-    dockerfile: ./nodes/Dockerfile
+    image: worker-node
     hostname: node2
     networks:
-      backend:
-        ipv4_address: 192.0.2.3
+      cluster:
+        ipv4_address: 192.1.0.4
+    extra_hosts:
+      - "node-master:192.1.0.2"
+      - "node1:192.1.2.2"
+    depends_on: 
+      - node1
 
 networks:
   cluster:
     driver: bridge
     ipam:
       config:
-        - subnet: 192.0.2.0/24
+        - subnet: 192.1.0.0/16
