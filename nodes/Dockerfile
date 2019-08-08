@@ -1,10 +1,10 @@
-FROM centos:7
+FROM ubuntu
 
 MAINTAINER JONATAS VIEIRA
 
-RUN yum update -y
+RUN apt-get -qq update -y
 
-RUN yum install java-1.8.0-openjdk-headless wget openssh-server openssh-clients sudo -y
+RUN apt-get -qqy install default-jre wget openssh-server openssh-client supervisor sudo
 
 RUN mkdir /var/run/sshd
 RUN echo 'root:password' | chpasswd
@@ -32,5 +32,15 @@ RUN echo "export JAVA_HOME=$(readlink -f /usr/bin/java | sed "s:bin/java::")" | 
 #Regenerate ssh keys
 RUN /usr/bin/ssh-keygen -A
 
+COPY ./docker-entrypoint.sh /usr/local/bin
+# RUN ln -s /usr/local/bin/docker-entrypoint.sh / # backwards compat
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+ENTRYPOINT ["docker-entrypoint.sh"]
 EXPOSE 22
-CMD ["sh", "-c", "/usr/sbin/sshd -D"]
+CMD ["hadoop"]
+
+
+
+
+
+
