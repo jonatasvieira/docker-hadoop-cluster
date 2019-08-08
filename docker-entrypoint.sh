@@ -18,4 +18,4 @@ if [ "$1" == 'hadoop' ]; then
 
 fi
 # To prevent containers exit
-tail -F./opt/hadoop/logs/*.log
+tail -F /opt/hadoop/logs/*.log
