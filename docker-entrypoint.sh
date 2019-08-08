@@ -17,5 +17,5 @@ if [ "$1" == 'hadoop' ]; then
     fi
 
 fi
-
-while true; do sleep 1000; done
+# To prevent containers exit
+tail -F ./opt/hadoop/logs/*.log
