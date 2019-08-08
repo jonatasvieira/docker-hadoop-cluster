@@ -4,7 +4,7 @@ MAINTAINER JONATAS VIEIRA
 
 RUN apt-get -qq update -y
 
-RUN apt-get -qqy install default-jre wget openssh-server openssh-client supervisor sudo
+RUN apt-get -qqy install default-jre wget openssh-server openssh-client sudo
 
 RUN mkdir /var/run/sshd
 RUN echo 'root:password' | chpasswd
@@ -33,7 +33,6 @@ RUN echo "export JAVA_HOME=$(readlink -f /usr/bin/java | sed "s:bin/java::")" | 
 RUN /usr/bin/ssh-keygen -A
 
 COPY ./docker-entrypoint.sh /usr/local/bin
-# RUN ln -s /usr/local/bin/docker-entrypoint.sh / # backwards compat
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 ENTRYPOINT ["docker-entrypoint.sh"]
 EXPOSE 22

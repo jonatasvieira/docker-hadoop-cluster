@@ -4,7 +4,7 @@ MAINTAINER JONATAS VIEIRA
 
 RUN apt-get -qq update -y
 
-RUN apt-get -qqy install default-jre wget openssh-server openssh-client supervisor sudo
+RUN apt-get -qqy install default-jre wget openssh-server openssh-client sudo
 
 RUN mkdir /var/run/sshd
 RUN echo 'root:password' | chpasswd
@@ -40,7 +40,6 @@ RUN /usr/bin/ssh-keygen -A
 RUN /opt/hadoop/bin/hdfs namenode -format
 
 COPY ./docker-entrypoint.sh /usr/local/bin
-# RUN ln -s /usr/local/bin/docker-entrypoint.sh / # backwards compat
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 ENTRYPOINT ["docker-entrypoint.sh"]
 EXPOSE 22
