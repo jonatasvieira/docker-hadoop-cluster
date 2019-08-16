@@ -10,7 +10,7 @@ from time import sleep
 from subprocess import call
 
 result = None
-
+myConnection = None
 while result is None:
     try:
         myConnection = MySQLdb.connect(host=hostname, user=username, passwd=password, db=database)
@@ -20,6 +20,8 @@ while result is None:
     except Exception as e:
         print(str(e))
         pass
+        
+myConnection.close()
 
 print("Running HUE startup script...")
 call("./startup.sh")

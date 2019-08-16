@@ -1,5 +1,5 @@
 CREATE DATABASE IF NOT EXISTS hue;
 
--- Grant All Privileges ON *.* to 'root'@'%' Identified By 'secret'; 
+GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY 'secret'; 
 
--- FLUSH PRIVILEGES;
+FLUSH PRIVILEGES;

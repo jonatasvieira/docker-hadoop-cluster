@@ -81,9 +81,6 @@ services:
         - ./hue/run-hue-when-database-up.sh:/opt/run-hue-when-database-up.sh
       depends_on:
         - "database"
-        - "node-master"
-        - "node1"
-        - "node2"
       extra_hosts:
         - "database:192.1.0.5"
         - "node-master:192.1.0.2"
