@@ -38,9 +38,48 @@ services:
         ipv4_address: 192.1.0.4
     extra_hosts:
       - "node-master:192.1.0.2"
-      - "node1:192.1.2.2"
+      - "node1:192.1.0.2"
     depends_on: 
       - node1
+
+  cloudera:
+      image: gethue/hue:latest
+      hostname: hue
+      container_name: hue
+      dns: 8.8.8.8
+      networks:
+        cluster:
+          ipv4_address: 192.1.0.5
+      ports:
+      - "8888:8888"
+      volumes:
+        - ./hue/conf/hue-overrides.ini:/usr/share/hue/desktop/conf/z-hue.ini
+      depends_on:
+        - "database"
+        - "node-master"
+        - "node1"
+        - "node2"
+      extra_hosts:
+        - "database:192.1.0.6"
+
+  database:
+      image: mysql:5.7
+      hostname: database
+      networks:
+        cluster:
+          ipv4_address: 192.1.0.6
+      ports:
+          - "33061:3306"
+      command: --init-file /data/application/init.sql
+      volumes:
+          - ./hue/init.sql:/data/application/init.sql
+      environment:
+          MYSQL_ROOT_USER: root
+          MYSQL_ROOT_PASSWORD: secret
+          MYSQL_DATABASE: hue
+          MYSQL_USER: root
+          MYSQL_PASSWORD: secret
+
 
 networks:
   cluster:

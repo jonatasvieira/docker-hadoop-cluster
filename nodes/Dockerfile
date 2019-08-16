@@ -2,6 +2,8 @@ FROM ubuntu
 
 MAINTAINER JONATAS VIEIRA
 
+WORKDIR /opt/
+
 RUN apt-get -qq update -y
 
 RUN apt-get -qqy install default-jre wget openssh-server openssh-client sudo
@@ -24,11 +26,11 @@ RUN wget http://apache.cs.utah.edu/hadoop/common/current/hadoop-3.1.2.tar.gz
 
 RUN tar -xzf hadoop-3.1.2.tar.gz
 
-RUN mv hadoop-3.1.2 /opt/hadoop
+RUN mv hadoop-3.1.2 ./hadoop
 
-COPY ./hadoop-conf-files/* /opt/hadoop/etc/hadoop/
+COPY ./hadoop-conf-files/* ./hadoop/etc/hadoop/
 
-RUN echo "export JAVA_HOME=$(readlink -f /usr/bin/java | sed "s:bin/java::")" | tee -a /opt/hadoop/etc/hadoop/hadoop-env.sh && echo $JAVA_HOME
+RUN echo "export JAVA_HOME=$(readlink -f /usr/bin/java | sed "s:bin/java::")" | tee -a ./hadoop/etc/hadoop/hadoop-env.sh && echo $JAVA_HOME
 #Regenerate ssh keys
 RUN /usr/bin/ssh-keygen -A
 

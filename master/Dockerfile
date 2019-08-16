@@ -2,6 +2,9 @@ FROM ubuntu
 
 MAINTAINER JONATAS VIEIRA
 
+
+WORKDIR /opt/
+
 RUN apt-get -qq update -y
 
 RUN apt-get -qqy install default-jre wget openssh-server openssh-client sudo
@@ -22,22 +25,27 @@ COPY ./ssh_keys/* /root/.ssh/
 
 RUN cat /root/.ssh/id_rsa.pub >> /root/.ssh/authorized_keys
 
-# To download and unpack hadoop
-USER root
 RUN wget http://apache.cs.utah.edu/hadoop/common/current/hadoop-3.1.2.tar.gz
 
 RUN tar -xzf hadoop-3.1.2.tar.gz
 
-RUN mv hadoop-3.1.2 /opt/hadoop
+RUN mv hadoop-3.1.2 ./hadoop
 
 
-COPY ./hadoop-conf-files/* /opt/hadoop/etc/hadoop/
+COPY ./hadoop-conf-files/* ./hadoop/etc/hadoop/
 
-RUN echo "export JAVA_HOME=$(readlink -f /usr/bin/java | sed "s:bin/java::")" | tee -a /opt/hadoop/etc/hadoop/hadoop-env.sh && echo $JAVA_HOME
+# To download HIVESERVER
+RUN wget http://ftp.unicamp.br/pub/apache/hive/hive-3.1.1/apache-hive-3.1.1-bin.tar.gz
+
+RUN tar -xzf apache-hive-3.1.1-bin.tar.gz
+
+RUN mv apache-hive-3.1.1-bin ./apache-hive
+
+RUN echo "export JAVA_HOME=$(readlink -f /usr/bin/java | sed "s:bin/java::")" | tee -a ./hadoop/etc/hadoop/hadoop-env.sh && echo $JAVA_HOME
 #Regenerate ssh keys
 RUN /usr/bin/ssh-keygen -A
 
-RUN /opt/hadoop/bin/hdfs namenode -format
+RUN ./hadoop/bin/hdfs namenode -format
 
 COPY ./docker-entrypoint.sh /usr/local/bin
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
