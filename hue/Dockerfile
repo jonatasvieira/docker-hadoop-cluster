@@ -34,7 +34,13 @@ RUN apt-get update -y && apt-get install -y \
   xmlsec1 \
   libxmlsec1-openssl \
   hugo \
+  wget \
   && rm -rf /var/lib/apt/lists/*
+
+RUN wget https://dev.mysql.com/get/Downloads/Connector-Python/mysql-connector-python-8.0.17.tar.gz
+RUN tar xzf mysql-connector-python-8.0.17.tar.gz
+# RUN cd mysql-connector-python-8.0.17
+RUN python mysql-connector-python-8.0.17/setup.py install
 
 ADD . /hue
 WORKDIR /hue

@@ -22,8 +22,11 @@ if [ "$1" == 'hadoop' ]; then
 
         /bin/bash  /opt/apache-hive/bin/init-hive-dfs.sh
 
+        # tells hive to use derby database as its metastore database.
+        $HIVE_HOME/bin/schematool -initSchema -dbType derby
+
         echo "Starting HIVESERVER.."
-        $HIVE_HOME/bin/hive --service hiveserver2
+        $HIVE_HOME/bin/hive --service hiveserver2 &
     fi
 
 fi
