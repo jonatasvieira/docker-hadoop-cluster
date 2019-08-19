@@ -3,6 +3,7 @@ set -e
 
 export HDFS_NAMENODE_USER="root"
 export HDFS_DATANODE_USER="root"
+export HADOOP_USER_NAME="root"
 export HDFS_SECONDARYNAMENODE_USER="root"
 export YARN_RESOURCEMANAGER_USER="root"
 export YARN_NODEMANAGER_USER="root"
@@ -27,6 +28,9 @@ if [ "$1" == 'hadoop' ]; then
 
         echo "Starting HIVESERVER.."
         $HIVE_HOME/bin/hive --service hiveserver2 &
+
+        echo "Starting webhttp hadoop service..."
+        /bin/bash /opt/hadoop/bin/hdfs httpfs &
     fi
 
 fi

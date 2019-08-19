@@ -6,7 +6,7 @@ WORKDIR /opt/
 
 RUN apt-get -qq update -y
 
-RUN apt-get -qqy install default-jre wget openssh-server openssh-client sudo
+RUN apt-get -qqy install wget openssh-server openssh-client sudo
 
 RUN mkdir /var/run/sshd
 RUN echo 'root:password' | chpasswd
@@ -23,14 +23,19 @@ RUN cat /root/.ssh/master.pub >> /root/.ssh/authorized_keys
 COPY ./bash_files/* /root/
 
 RUN wget http://apache.cs.utah.edu/hadoop/common/current/hadoop-3.1.2.tar.gz
-
 RUN tar -xzf hadoop-3.1.2.tar.gz
-
 RUN mv hadoop-3.1.2 ./hadoop
 
 COPY ./hadoop-conf-files/* ./hadoop/etc/hadoop/
 
-RUN echo "export JAVA_HOME=$(readlink -f /usr/bin/java | sed "s:bin/java::")" | tee -a ./hadoop/etc/hadoop/hadoop-env.sh && echo $JAVA_HOME
+# To fix hive error when startup
+RUN wget http://monalisa.cern.ch/MONALISA/download/java/jdk-8u40-linux-x64.tar.gz
+RUN tar -xzf jdk-8u40-linux-x64.tar.gz -C /usr/lib/jvm/
+
+ENV JAVA_HOME=/usr/lib/jvm/jdk1.8.0_40
+ENV PATH="${JAVA_HOME}/bin:${PATH}"
+
+# RUN echo "export JAVA_HOME=$(readlink -f /usr/bin/java | sed "s:bin/java::")" | tee -a ./hadoop/etc/hadoop/hadoop-env.sh && echo $JAVA_HOME
 #Regenerate ssh keys
 RUN /usr/bin/ssh-keygen -A
 

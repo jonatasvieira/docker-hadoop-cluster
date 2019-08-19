@@ -46,30 +46,30 @@ services:
       - node1
       
   database:
-      image: mysql:5.7
+      image: mysql
       hostname: database
       container_name: mysql
       networks:
         cluster:
           ipv4_address: 192.1.0.5
       ports:
-          - "3306:3306"
+          - "13306:3306"
       command: --init-file /data/application/init.sql
       volumes:
           - ./hue/init.sql:/data/application/init.sql
       environment:
-          MYSQL_ROOT_USER: root
           MYSQL_ROOT_PASSWORD: secret
           MYSQL_DATABASE: hue
-          MYSQL_USER: root
+          MYSQL_USER: user
           MYSQL_PASSWORD: secret
+          MYSQL_ROOT_USER: root
 
   hue:
       image: gethue/hue:latest
       hostname: hue
       container_name: hue_
       dns: 8.8.8.8
-      command: /bin/bash /opt/run-hue-when-database-up.sh
+      command: /bin/bash startup.sh
       networks:
         cluster:
           ipv4_address: 192.1.0.6
@@ -78,7 +78,7 @@ services:
       volumes:
         - ./hue/conf/hue-overrides.ini:/usr/share/hue/desktop/conf/z-hue.ini
         - ./hue/connection-test.py:/opt/connection-test.py
-        - ./hue/run-hue-when-database-up.sh:/opt/run-hue-when-database-up.sh
+        - ./hue/startup.sh:/usr/share/hue/startup.sh
       depends_on:
         - "database"
       extra_hosts:
