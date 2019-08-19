@@ -79,8 +79,6 @@ services:
         - ./hue/conf/hue-overrides.ini:/usr/share/hue/desktop/conf/z-hue.ini
         - ./hue/connection-test.py:/opt/connection-test.py
         - ./hue/startup.sh:/usr/share/hue/startup.sh
-      depends_on:
-        - "database"
       extra_hosts:
         - "database:192.1.0.5"
         - "node-master:192.1.0.2"

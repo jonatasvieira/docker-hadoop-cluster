@@ -30,6 +30,7 @@ COPY ./hadoop-conf-files/* ./hadoop/etc/hadoop/
 
 # To fix hive error when startup
 RUN wget http://monalisa.cern.ch/MONALISA/download/java/jdk-8u40-linux-x64.tar.gz
+RUN mkdir -p /usr/lib/jvm/
 RUN tar -xzf jdk-8u40-linux-x64.tar.gz -C /usr/lib/jvm/
 
 ENV JAVA_HOME=/usr/lib/jvm/jdk1.8.0_40

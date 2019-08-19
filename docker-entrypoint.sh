@@ -21,6 +21,12 @@ if [ "$1" == 'hadoop' ]; then
         # Create non-existing folders
         /bin/bash /opt/hadoop/bin/hadoop fs -mkdir -p /user/hive/warehouse
 
+        # Create hue directories
+        $HADOOP_HOME/bin/hadoop fs -mkdir /user/hue
+        $HADOOP_HOME/bin/hadoop fs -chown hue:hadoop /user/hue
+        $HADOOP_HOME/bin/hadoop fs -chmod 755 /user/hue
+
+
         /bin/bash  /opt/apache-hive/bin/init-hive-dfs.sh
 
         # tells hive to use derby database as its metastore database.
