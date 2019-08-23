@@ -24,7 +24,7 @@ COPY ./bash_files/* /root/
 COPY ./ssh_keys/* /root/.ssh/
 
 RUN cat /root/.ssh/id_rsa.pub >> /root/.ssh/authorized_keys
-
+RUN chmod 0600 /root/.ssh/id_rsa
 RUN wget http://apache.cs.utah.edu/hadoop/common/current/hadoop-3.1.2.tar.gz
 RUN tar -xzf hadoop-3.1.2.tar.gz
 RUN mv hadoop-3.1.2 ./hadoop

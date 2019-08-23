@@ -11,6 +11,9 @@ services:
     networks:
       cluster:
         ipv4_address: 192.1.0.2
+    ports:
+      - "9000:9000"
+      - "10000:10000"
     depends_on:
       - node1
       - node2
