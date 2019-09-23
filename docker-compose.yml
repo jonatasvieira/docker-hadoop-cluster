@@ -11,12 +11,18 @@ services:
     networks:
       cluster:
         ipv4_address: 192.1.0.2
+    healthcheck:
+      test: ["CMD", "telnet", "localhost:9000"]
+      interval: 10s
+      timeout: 30s
+      retries: 10
+    depends_on:
+      - database
+#    volumes:
+#      - ./hive-scripts/cgnat-clar-144.sql:/opt/hive/scripts/init.sql
     ports:
       - "9000:9000"
       - "10000:10000"
-    depends_on:
-      - node1
-      - node2
     extra_hosts:
       - "node1:192.1.0.3"
       - "node2:192.1.0.4"
@@ -28,9 +34,13 @@ services:
     image: worker-node
     container_name: data-node1
     hostname: node1
+    depends_on:
+      - node-master
     networks:
       cluster:
         ipv4_address: 192.1.0.3
+    volumes:
+      - /hadoop:/opt/hadoop/data/dataNode
     extra_hosts:
       - "node-master:192.1.0.2"
       - "node2:192.1.0.4"
@@ -39,6 +49,8 @@ services:
     image: worker-node
     container_name: data-node2
     hostname: node2
+    depends_on:
+      - node-master
     networks:
       cluster:
         ipv4_address: 192.1.0.4
@@ -49,17 +61,23 @@ services:
       - node1
       
   database:
-      image: mysql
+      image: mysql:8.0.17
       hostname: database
       container_name: mysql
       networks:
         cluster:
           ipv4_address: 192.1.0.5
+      healthcheck:
+        test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+        interval: 10s
+        timeout: 5s
+        retries: 5
       ports:
           - "13306:3306"
       command: --init-file /data/application/init.sql
       volumes:
           - ./hue/init.sql:/data/application/init.sql
+          - ./hive/setup-hive-metastore-db.sh:/data/application/setup-and-start.sh
       environment:
           MYSQL_ROOT_PASSWORD: secret
           MYSQL_DATABASE: hue
@@ -73,6 +91,8 @@ services:
       container_name: hue_
       dns: 8.8.8.8
       command: /bin/bash startup.sh
+      depends_on:
+        - database
       networks:
         cluster:
           ipv4_address: 192.1.0.6

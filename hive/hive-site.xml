@@ -25,4 +25,25 @@
           <name>hive.server2.enable.impersonation</name>
           <value>true</value>
      </property>
+     <property>
+          <name>javax.jdo.option.ConnectionURL</name> 
+ 	  <value>jdbc:mysql://192.1.0.5/metastore_db?metastorecreateDatabaseIfNotExist=true;useSSL=false</value>
+     </property>
+     <property>
+      	  <name>javax.jdo.option.ConnectionDriverName</name>
+          <value>com.mysql.cj.jdbc.Driver</value>
+          <description>MySQL JDBC driver class</description>
+     </property>
+
+    <property>
+      <name>javax.jdo.option.ConnectionUserName</name>
+      <value>root</value>
+      <description>user name for connecting to mysql server</description>
+   </property>
+
+   <property>
+      <name>javax.jdo.option.ConnectionPassword</name>
+      <value>secret</value>
+      <description>password for connecting to mysql server</description>
+   </property>
 </configuration>

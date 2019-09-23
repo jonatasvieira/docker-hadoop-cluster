@@ -1,4 +1,4 @@
-FROM ubuntu
+FROM ubuntu:18.04
 
 MAINTAINER JONATAS VIEIRA
 
@@ -32,9 +32,15 @@ RUN mv hadoop-3.1.2 ./hadoop
 COPY ./hadoop-conf-files/* ./hadoop/etc/hadoop/
 
 # To download HIVESERVER
-RUN wget http://ftp.unicamp.br/pub/apache/hive/hive-3.1.1/apache-hive-3.1.1-bin.tar.gz
-RUN tar -xzf apache-hive-3.1.1-bin.tar.gz
-RUN mv apache-hive-3.1.1-bin ./apache-hive
+RUN wget http://ftp.unicamp.br/pub/apache/hive/hive-3.1.2/apache-hive-3.1.2-bin.tar.gz
+RUN tar -xzf apache-hive-3.1.2-bin.tar.gz
+RUN mv apache-hive-3.1.2-bin ./apache-hive
+
+# Download and copy mysql connector driver
+RUN wget https://dev.mysql.com/get/Downloads/Connector-J/mysql-connector-java_8.0.17-1ubuntu18.04_all.deb
+RUN dpkg -i mysql-connector-java_8.0.17-1ubuntu18.04_all.deb
+RUN ln -s /usr/share/java/mysql-connector-java-8.0.17.jar /opt/apache-hive/lib/mysql-connector-java.jar
+
 
 # To fix hive error when startup
 RUN wget http://monalisa.cern.ch/MONALISA/download/java/jdk-8u40-linux-x64.tar.gz
