@@ -1,4 +1,4 @@
-version: '3'
+version: '2.1'
 
 services:
   
@@ -11,15 +11,12 @@ services:
     networks:
       cluster:
         ipv4_address: 192.1.0.2
-    healthcheck:
-      test: ["CMD", "telnet", "localhost:9000"]
-      interval: 10s
-      timeout: 30s
-      retries: 10
     depends_on:
-      - database
-#    volumes:
-#      - ./hive-scripts/cgnat-clar-144.sql:/opt/hive/scripts/init.sql
+      database:
+        condition: service_healthy
+    ports:
+    volumes:
+      - ./hive-scripts/:/opt/hive/scripts/
     ports:
       - "9000:9000"
       - "10000:10000"
@@ -68,10 +65,10 @@ services:
         cluster:
           ipv4_address: 192.1.0.5
       healthcheck:
-        test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
-        interval: 10s
-        timeout: 5s
-        retries: 5
+        test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost","-u","root","-psecret"]
+        interval: 30s
+        timeout: 1s
+        retries: 10
       ports:
           - "13306:3306"
       command: --init-file /data/application/init.sql
@@ -91,11 +88,12 @@ services:
       container_name: hue_
       dns: 8.8.8.8
       command: /bin/bash startup.sh
-      depends_on:
-        - database
       networks:
         cluster:
           ipv4_address: 192.1.0.6
+      depends_on:
+        database:
+          condition: service_healthy
       ports:
       - "8888:8888"
       volumes:
@@ -105,8 +103,6 @@ services:
       extra_hosts:
         - "database:192.1.0.5"
         - "node-master:192.1.0.2"
-
-
 
 networks:
   cluster:

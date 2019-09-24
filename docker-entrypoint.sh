@@ -26,16 +26,19 @@ if [ "$1" == 'hadoop' ]; then
         $HADOOP_HOME/bin/hadoop fs -chown hue:hadoop /user/hue
         $HADOOP_HOME/bin/hadoop fs -chmod 755 /user/hue
 
-
         /bin/bash  /opt/apache-hive/bin/init-hive-dfs.sh
 
         # tells hive to use derby database as its metastore database.
-        #$HIVE_HOME/bin/schematool -initSchema -dbType derby
         $HIVE_HOME/bin/schematool -dbType mysql -initSchema  
-
 
         echo "Starting HIVESERVER.."
         $HIVE_HOME/bin/hive --service hiveserver2 &
+
+        echo "Creating user tables.."
+        for file in `/bin/ls /opt/hive/scripts/*.sql`; do 
+           echo "Running script file named: $file"
+           $HIVE_HOME/bin/hive -f "$file"
+	done
 
         echo "Starting webhttp hadoop service..."
         /bin/bash /opt/hadoop/bin/hdfs httpfs &
