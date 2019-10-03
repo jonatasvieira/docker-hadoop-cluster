@@ -57,7 +57,7 @@ COPY ./hive/hive-site.xml apache-hive/conf/hive-site.xml
 #Regenerate ssh keys
 RUN /usr/bin/ssh-keygen -A
 
-RUN ./hadoop/bin/hdfs namenode -format
+# RUN ./hadoop/bin/hdfs namenode -format
 
 COPY ./docker-entrypoint.sh /usr/local/bin
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh

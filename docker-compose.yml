@@ -1,4 +1,4 @@
-version: '2.1'
+version: '2.4'
 
 services:
   
@@ -16,7 +16,8 @@ services:
         condition: service_healthy
     ports:
     volumes:
-      - ./hive-scripts/:/opt/hive/scripts/
+      - ./hive-scripts:/opt/hive/scripts/
+      - /hadoop/namenode:/opt/hadoop/data/nameNode
     ports:
       - "9000:9000"
       - "10000:10000"
@@ -33,11 +34,11 @@ services:
     hostname: node1
     depends_on:
       - node-master
+    volumes:
+      - /hadoop/datanode1:/opt/hadoop/data/dataNode
     networks:
       cluster:
         ipv4_address: 192.1.0.3
-    volumes:
-      - /hadoop:/opt/hadoop/data/dataNode
     extra_hosts:
       - "node-master:192.1.0.2"
       - "node2:192.1.0.4"
@@ -48,6 +49,8 @@ services:
     hostname: node2
     depends_on:
       - node-master
+    volumes:
+      - /hadoop/datanode2:/opt/hadoop/data/dataNode
     networks:
       cluster:
         ipv4_address: 192.1.0.4
@@ -68,13 +71,13 @@ services:
         test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost","-u","root","-psecret"]
         interval: 30s
         timeout: 1s
-        retries: 10
+        retries: 20
       ports:
           - "13306:3306"
       command: --init-file /data/application/init.sql
       volumes:
           - ./hue/init.sql:/data/application/init.sql
-          - ./hive/setup-hive-metastore-db.sh:/data/application/setup-and-start.sh
+          - /hadoop/mysql-datadir:/var/lib/mysql
       environment:
           MYSQL_ROOT_PASSWORD: secret
           MYSQL_DATABASE: hue
@@ -103,6 +106,7 @@ services:
       extra_hosts:
         - "database:192.1.0.5"
         - "node-master:192.1.0.2"
+
 
 networks:
   cluster:

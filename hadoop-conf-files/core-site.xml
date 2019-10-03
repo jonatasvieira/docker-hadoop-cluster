@@ -3,7 +3,7 @@
 <configuration>
     <property>
         <name>fs.default.name</name>
-        <value>hdfs://node-master:9000</value>
+        <value>hdfs://192.1.0.2:9000</value>
     </property>
     <property>
         <name>hadoop.proxyuser.hue.hosts</name>
