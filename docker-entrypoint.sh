@@ -17,10 +17,8 @@ if [ "$1" == 'hadoop' ]; then
     /etc/init.d/ssh start
 
     if [ "$(hostname)" == 'node-master' ]; then
-        echo "HDFS variable"
         HDFS_ALREADY_FORMATTED=$(find "$HADOOP_HOME/data/nameNode" -mindepth 1 -print -quit 2>/dev/null)
 
-        echo "HDFS if "
         # Checking if HDFS needs to be formated.
         if [ !  $HDFS_ALREADY_FORMATTED ]; then
             echo "FORMATTING NAMENODE"
