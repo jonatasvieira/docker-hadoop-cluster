@@ -34,7 +34,19 @@
           <value>com.mysql.cj.jdbc.Driver</value>
           <description>MySQL JDBC driver class</description>
      </property>
-
+    <property>
+      <name>hive.strict.checks.type.safety</name>
+      <value>true</value>
+      <description>
+        Enabling strict type safety checks disallows the following:
+          Comparing bigints and strings.
+          Comparing bigints and doubles.
+      </description>
+    </property>
+    <property>
+      <name>hive.mapred.mode</name>
+      <value>nonstrict</value>
+    </property>
     <property>
       <name>javax.jdo.option.ConnectionUserName</name>
       <value>root</value>

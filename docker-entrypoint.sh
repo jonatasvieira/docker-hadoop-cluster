@@ -9,6 +9,7 @@ export YARN_RESOURCEMANAGER_USER="root"
 export YARN_NODEMANAGER_USER="root"
 export HADOOP_HOME="/opt/hadoop"
 export HIVE_HOME="/opt/apache-hive"
+export HADOOP_OPTS="-Xmx1024m -Xms1024m"
 
 echo "listing data directories of $(hostname)"
 /bin/ls /opt/hadoop/data

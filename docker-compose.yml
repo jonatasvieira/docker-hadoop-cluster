@@ -14,10 +14,10 @@ services:
     depends_on:
       database:
         condition: service_healthy
-    ports:
     volumes:
       - ./hive-scripts:/opt/hive/scripts/
       - /hadoop/namenode:/opt/hadoop/data/nameNode
+    restart: always
     ports:
       - "9000:9000"
       - "10000:10000"
